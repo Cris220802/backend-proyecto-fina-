@@ -2,6 +2,7 @@ package com.proyecto.time.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,18 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.time.entities.TimeTracking;
+import com.proyecto.time.entities.Usuario;
+import com.proyecto.time.records.TimeRequest;
 import com.proyecto.time.respository.TimeTrackingRepository;
 import com.proyecto.time.respository.UsuarioRepository;
+import com.proyecto.time.service.TimeTrackingService;
 
 @RestController
 @RequestMapping("/api/v1/time-tracking")
 public class TimeTrackingController {
+
+    private final TimeTrackingService timeTrackingService;
     private final TimeTrackingRepository timeTrackingRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public TimeTrackingController(TimeTrackingRepository timeTrackingRepository, UsuarioRepository usuarioRepository) {
+    public TimeTrackingController(TimeTrackingRepository timeTrackingRepository, UsuarioRepository usuarioRepository, TimeTrackingService timeTrackingService) {
         this.timeTrackingRepository = timeTrackingRepository;
         this.usuarioRepository = usuarioRepository;
+        this.timeTrackingService = timeTrackingService;
     }
 
     @GetMapping
@@ -33,11 +40,9 @@ public class TimeTrackingController {
     }
 
     @PostMapping("/{usuarioId}")
-    public TimeTracking registrarTimeTracking(@PathVariable Long usuarioId, @RequestBody TimeTracking timeTracking) {
-        return usuarioRepository.findById(usuarioId).map(usuario -> {
-            timeTracking.setUsuario(usuario);
-            return timeTrackingRepository.save(timeTracking);
-        }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public TimeTracking registrarTimeTracking(@PathVariable Long usuarioId, @RequestBody TimeRequest timeTracking) {
+        Usuario user = usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return timeTrackingService.saveTimeTracking(timeTracking, user);
     }
 
      // Obtener un registro específico por su ID
