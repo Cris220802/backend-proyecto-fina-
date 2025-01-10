@@ -1,5 +1,7 @@
 package com.proyecto.time.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ public class TimeTrackingService {
     @Autowired
     private TimeTrackingRepository timeTrackingRepository;
     public TimeTracking saveTimeTracking(TimeRequest request, Usuario user) {
+        System.out.println(user);
         var time = TimeTracking.builder()
             .checkInTime(request.checkInTime())
             .checkOutTime(request.checkOutTime())
@@ -21,5 +24,9 @@ public class TimeTrackingService {
             .build();
         timeTrackingRepository.save(time);
         return time;
+    }
+
+    public List<TimeTracking> obtenerRegistrosPorUsuario(Usuario usuario) {
+        return timeTrackingRepository.findByUsuario(usuario);
     }
 }

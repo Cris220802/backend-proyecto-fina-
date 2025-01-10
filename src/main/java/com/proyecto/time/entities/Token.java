@@ -44,4 +44,13 @@ public class Token {
     @JoinColumn(name = "user_id")
     public Usuario usuario;
 
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                ", tokenValue='" + token+ '\'' +
+                // Evitar incluir el usuario para prevenir recursión
+                '}';
+    }
+
 }

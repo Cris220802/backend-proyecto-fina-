@@ -60,6 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        System.out.println(username);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         Optional<Usuario> user = usuarioRepository.findByUsername(userDetails.getUsername());
@@ -70,6 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         boolean isTokenValid = jwtService.isTokenValid(jwtToken, user.get());
+        System.out.println(isTokenValid);
         if (!isTokenValid) {
             return;
         }

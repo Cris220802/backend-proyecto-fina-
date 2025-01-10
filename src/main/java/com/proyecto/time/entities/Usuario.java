@@ -40,4 +40,13 @@ public class Usuario {
         }
         this.timeTrackings = timeTrackings;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                // Evitar incluir la lista de tokens para prevenir recursión
+                '}';
+    }
 }

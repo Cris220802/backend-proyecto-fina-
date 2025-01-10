@@ -1,6 +1,8 @@
 package com.proyecto.time.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,8 @@ public class TimeTrackingController {
     private final TimeTrackingRepository timeTrackingRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public TimeTrackingController(TimeTrackingRepository timeTrackingRepository, UsuarioRepository usuarioRepository, TimeTrackingService timeTrackingService) {
+    public TimeTrackingController(TimeTrackingRepository timeTrackingRepository, UsuarioRepository usuarioRepository,
+            TimeTrackingService timeTrackingService) {
         this.timeTrackingRepository = timeTrackingRepository;
         this.usuarioRepository = usuarioRepository;
         this.timeTrackingService = timeTrackingService;
@@ -41,11 +44,13 @@ public class TimeTrackingController {
 
     @PostMapping("/{usuarioId}")
     public TimeTracking registrarTimeTracking(@PathVariable Long usuarioId, @RequestBody TimeRequest timeTracking) {
-        Usuario user = usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario user = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                System.out.println(user);
         return timeTrackingService.saveTimeTracking(timeTracking, user);
     }
 
-     // Obtener un registro específico por su ID
+    // Obtener un registro específico por su ID
     @GetMapping("/{id}")
     public ResponseEntity<TimeTracking> obtenerPorId(@PathVariable Long id) {
         return timeTrackingRepository.findById(id)
@@ -55,10 +60,11 @@ public class TimeTrackingController {
 
     // Actualizar un registro existente
     @PutMapping("/{id}")
-    public ResponseEntity<TimeTracking> actualizarTimeTracking(@PathVariable Long id, @RequestBody TimeTracking detallesActualizados) {
+    public ResponseEntity<TimeTracking> actualizarTimeTracking(@PathVariable Long id,
+            @RequestBody TimeTracking detallesActualizados) {
         return timeTrackingRepository.findById(id).map(timeTracking -> {
-           timeTracking.setCheckInTime(detallesActualizados.getCheckInTime());
-           timeTracking.setCheckOutTime(detallesActualizados.getCheckOutTime());
+            timeTracking.setCheckInTime(detallesActualizados.getCheckInTime());
+            timeTracking.setCheckOutTime(detallesActualizados.getCheckOutTime());
             TimeTracking actualizado = timeTrackingRepository.save(timeTracking);
             return ResponseEntity.ok(actualizado);
         }).orElse(ResponseEntity.notFound().build());
@@ -75,10 +81,12 @@ public class TimeTrackingController {
 
     // Obtener todos los registros de time tracking de un usuario específico
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<TimeTracking>> obtenerPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<Map<String, Object>> obtenerPorUsuario(@PathVariable Long usuarioId) {
         return usuarioRepository.findById(usuarioId).map(usuario -> {
-            List<TimeTracking> registros = timeTrackingRepository.findByUsuario(usuario);
-            return ResponseEntity.ok(registros);
+            List<TimeTracking> registros = timeTrackingService.obtenerRegistrosPorUsuario(usuario);
+            Map<String, Object> response = new HashMap<>();
+            response.put("times", registros);
+            return ResponseEntity.ok(response);
         }).orElse(ResponseEntity.notFound().build());
     }
 }
