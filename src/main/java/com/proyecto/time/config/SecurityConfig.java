@@ -95,7 +95,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter 
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfig = new CorsConfiguration();
-    corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://yourfrontenddomain.com")); // Reemplaza con los dominios que necesitas permitir
+    corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://proyecto-final-time.netlify.app/")); // Reemplaza con los dominios que necesitas permitir
     corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
     corsConfig.setAllowCredentials(true);

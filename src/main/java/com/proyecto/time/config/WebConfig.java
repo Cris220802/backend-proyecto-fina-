@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Permitimos todas las rutas
-                .allowedOrigins("http://localhost:4200")  // Permitimos el origen de tu frontend Angular
+                .allowedOrigins("https://proyecto-final-time.netlify.app/")  // Permitimos el origen de tu frontend Angular
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Métodos permitidos
                 .allowedHeaders("*");  // Permitimos cualquier cabecera
     }
