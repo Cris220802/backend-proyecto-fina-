@@ -41,13 +41,12 @@ public class AuthService {
             var savedUser = usuarioRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
-            saveUserToken(savedUser, jwtToken);
+            // saveUserToken(savedUser, jwtToken);
             return ResponseEntity.ok(new TokenResponse(jwtToken, refreshToken, user.getId(), user.getUsername()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Error al iniciar sesión: " + e.getMessage(), 500));
         }
-
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
